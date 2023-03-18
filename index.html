@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Item Comparison Game</title>
+  </head>
+  <body>
+    <h1>Item Comparison Game</h1>
+    <p>Which item is more valuable?</p>
+    <div id="item1"></div>
+    <div id="item2"></div>
+    <button onclick="chooseWinner()">Submit</button>
+    <p id="result"></p>
+    <script>
+      // Load the list of items from a file
+      fetch("items.txt")
+        .then(response => response.text())
+        .then(data => {
+          // Split the items into an array
+          const items = data.trim().split("\n");
+          // Choose two random items
+          let item1 = items[Math.floor(Math.random() * items.length)];
+          let item2 = items[Math.floor(Math.random() * items.length)];
+          // Make sure the two items are different
+          while (item1 === item2) {
+            item2 = items[Math.floor(Math.random() * items.length)];
+          }
+          // Display the two items on the page
+          document.getElementById("item1").textContent = item1;
+          document.getElementById("item2").textContent = item2;
+        })
+        .catch(error => console.log(error));
+
+      function chooseWinner() {
+        const resultElement = document.getElementById("result");
+        const item1 = document.getElementById("item1").textContent;
+        const item2 = document.getElementById("item2").textContent;
+        const winner = prompt(`Which is more valuable?\n1. ${item1}\n2. ${item2}`);
+        if (winner === "1") {
+          resultElement.textContent = `${item1} is more valuable!`;
+        } else if (winner === "2") {
+          resultElement.textContent = `${item2} is more valuable!`;
+        } else {
+          resultElement.textContent = "Please choose 1 or 2.";
+        }
+        // Choose two new random items
+        fetch("items.txt")
+          .then(response => response.text())
+          .then(data => {
+            const items = data.trim().split("\n");
+            let newitem1 = items[Math.floor(Math.random() * items.length)];
+            let newitem2 = items[Math.floor(Math.random() * items.length)];
+            while (newitem1 === newitem2) {
+              newitem2 = items[Math.floor(Math.random() * items.length)];
+            }
+            document.getElementById("item1").textContent = newitem1;
+            document.getElementById("item2").textContent = newitem2;
+          })
+          .catch(error => console.log(error));
+      }
+    </script>
+  </body>
+</html>
